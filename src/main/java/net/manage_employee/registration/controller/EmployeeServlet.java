@@ -86,9 +86,11 @@ public class EmployeeServlet extends HttpServlet {
 			break;
 
 		case "/edit":
+			showEditForm(request, response);
 			break;
 
 		case "/update":
+			updateEmployee(request, response);
 			break;
 
 		default:
@@ -102,6 +104,22 @@ public class EmployeeServlet extends HttpServlet {
 		this.context = new WebContext(request, response, request.getServletContext());
 		response.setCharacterEncoding("utf-8");
 		engine.process("add_employee.html", context, response.getWriter());
+	}
+	
+	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		this.engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
+		this.context = new WebContext(request, response, request.getServletContext());
+		response.setCharacterEncoding("utf-8");
+		Long id = Long.parseLong(request.getParameter("id"));
+		Employee existingEmployee = employeeDao.getEmployeeById(id);
+		context.setVariable("editEmp", existingEmployee);
+		engine.process("edit_employee.html", context, response.getWriter());
+	}
+	
+	private void updateEmployee(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		
 	}
 
 	private void insertEmployee(HttpServletRequest request, HttpServletResponse response)
